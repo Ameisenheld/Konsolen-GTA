@@ -6,7 +6,7 @@ int main() {
 	myAuto meinAuto;
 	int input=0;
 	try{
-		while(input<8 && input >=0){
+		while(input<11 && input >=0){
 			if(input==0)
 				cout <<  endl <<"MENU:" << endl
 					 << "0\t" << "Ruft dieses Menue wieder auf" << endl
@@ -17,7 +17,10 @@ int main() {
 					 << "5\t" << "Tanken" << endl
 					 << "6\t" << "Auto auf Schaeden ueberpruefen" << endl
 					 << "7\t" << "In die Werkstatt fahren" << endl
-					 << "8\t" << "Beenden" << endl;
+					 << "8\t" << "Polizeistatus anzeigen" << endl
+					 << "9\t" << "Speichern" << endl
+					 << "10\t" << "Laden" << endl
+					 << "11\t" << "Beenden" << endl;
 			if(input==1){
 				double a,b;
 				cout << "Wie schnell? ";
@@ -52,23 +55,42 @@ int main() {
 			if(input==7){
 				meinAuto.reparier();
 			}
+			if(input==8){
+				cout << meinAuto.getPolizeigefahr() << "% der Polizisten kennen dich" << endl;
+			}
+			if(input==9){
+				
+			}
+			if(input==10){
+				
+			}
 			cin >> input;	
 		}
 	} catch(int err){
 		if (err==0){
-			cout << "Mwahahahaha, mitten auf der Straße stehen geblieben?" << endl;
+			cout << endl << "Mwahahahaha, mitten auf der Strasse stehen geblieben?" << endl;
 			return 0;	
 		}
+		if (err==101){
+			cout << endl << "Du wurdest auf offener Strasse von Polizisten niedergeschossen." << endl
+				 << "Du hast das spiel gewonnen!" << endl;
+		}
 		if (err==1411){
-			cout << "Wilkommen im Gefaengnis!" << endl << "\tGame Over!";
+			cout << endl << "Wilkommen im Gefaengnis!" << endl << "\tGame Over!";
 			return 0;
 		}
-		if(err==4411){
-			cout << "Sieht aus als würde dein Auto explodieren..." << endl << "Goettliche Gerechtigkeit und sowas" << endl;
+		if (err==14112){
+			cout << endl << "Es klopft... Und die Polizeit steht vor der Tuer!";
+			cout << endl << "Wilkommen im Gefaengnis!" << endl << "\tGame Over!" << endl;
 			return 0;
 		}
-		if(err==77){
-			cout << "Das sieht nach nem Kaputtem Auto aus =D, VERSAGER!" << endl;
+		if (err==4411){
+			cout << endl << "Sieht aus als wuerde dein Auto explodieren..." << endl
+				 << "Goettliche Gerechtigkeit und sowas" << endl;
+			return 0;
+		}
+		if (err==77){
+			cout << endl << "Das sieht nach nem Kaputtem Auto aus =D, VERSAGER!" << endl;
 			return 0;
 		}
 	}

@@ -15,6 +15,7 @@ class myAuto{
 		void reparier();
 		myAuto();
 		void ueberfall(int);
+		int getPolizeigefahr();
 	private:
 		double kilometerstand;
 		double geldbeutel;
@@ -26,7 +27,14 @@ class myAuto{
 		bool reifen;
 		bool fenster;
 		int random(int,int,bool);
+		double polizeiAufmerksamkeit;
+		void sleep();
+		void policeCheck();
 };
+
+inline int myAuto::getPolizeigefahr(){
+	return polizeiAufmerksamkeit;
+}
 
 inline int myAuto::getGeldbeutel(){
 	return geldbeutel;

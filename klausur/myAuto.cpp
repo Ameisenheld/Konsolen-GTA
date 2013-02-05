@@ -16,17 +16,28 @@ int myAuto::random(int lowerbounds, int upperbounds, bool randomize){
 void myAuto::ueberfall(int risiko){
 	cout << endl;
 	if(risiko < 0 || risiko > 100) throw 1411;
-	fahr(risiko);
+	fahr(risiko+40,risiko/2);
 	int g=random(0,100,false);
-	if(g<risiko) throw 1411;
+	if(g<polizeiAufmerksamkeit) throw 1411;
 	else{
-		int res=(g*risiko)/50;
+		int res=(g*risiko)/20-risiko;
 		if(res > 0){
 			cout << "YAR HAR! " << res << "Euro wurden erbeutet!" << endl;
 			geldbeutel+=res;	
 		}
 		else cout << "Gebracht hats nichts, aber immerhin stecken wir nicht im Knast..." << endl << endl;
+		polizeiAufmerksamkeit+=risiko/4;
+		policeCheck();
 	}
+}
+
+void myAuto::policeCheck(){
+	if(polizeiAufmerksamkeit<20)		cout << "Die Polizei hat dich im Auge" << endl;
+	else if(polizeiAufmerksamkeit<40)	cout << "Die ersten Cops kennen deinen Namen" << endl;
+	else if(polizeiAufmerksamkeit<60)	cout << "Die Bullen fangen an dich zu besuchen" << endl;
+	else if(polizeiAufmerksamkeit<80)	cout << "Achtung! Langsam wirds eng..." << endl;
+	else if(polizeiAufmerksamkeit<100)	cout << "Es ist ein Wunder das du noch frei rumrennst" << endl;
+	else if(polizeiAufmerksamkeit>=100) throw 101;
 }
 
 void myAuto::fahr(double kmh, double km){
@@ -36,25 +47,40 @@ void myAuto::fahr(double kmh, double km){
 		tankFuellung=tankFuellung-verbrauch*kmh;
 		if(tankLeer()) throw 0;
 		if(i%10 == 1){
-			if(kmh>0 && kmh<50) cout<<"tucker\t";
-			else if(kmh<100) 	cout<<"Wrumm!\t";
-			else if(kmh<150) 	cout<<"WRUMM!\t";
+			if(kmh>0 && kmh<50) cout<<"Tucker...\t";
+			else if(kmh<100) 	cout<<"Wrumm!...\t";
+			else if(kmh<150) 	cout<<"WRUMM!...\t";
 			else {
 				cout << "Auto putt... =( " << endl;
 				throw 4411;	
 			}
 			memory++;
 			if(memory%10 == 0){
-				cout << "zeit zum schlafen..." << endl;
-				random(1,1,true);
+				sleep();
 			}
-			if(random(0,5,false)==4) unfall();
+			if(random(0,50,false)==42) unfall();
 		}
 	}
 	tankFuellung=tankFuellung-verbrauch*kmh*(km-(int)km);
 	if(tankLeer()) throw 0;
 	kilometerstand+=km;
 	cout << endl;
+}
+
+void myAuto::sleep(){
+	cout << " zeit zum Schlafen..." << endl;
+	if(random(1,200,true)<polizeiAufmerksamkeit){
+		throw 14112;
+	}
+	if(polizeiAufmerksamkeit>0){
+		if(polizeiAufmerksamkeit>20) polizeiAufmerksamkeit-=8;
+		else polizeiAufmerksamkeit-=4;
+		cout << "Ein paar Cops vergessen dich." << endl;
+		if(polizeiAufmerksamkeit<=0){
+			polizeiAufmerksamkeit=0;
+			cout << "Du bist von der Fahndungsliste runter!" << endl;
+		} 
+	}
 }
 
 bool myAuto::istKaputt(){
@@ -64,10 +90,26 @@ bool myAuto::istKaputt(){
 void myAuto::unfall(){
 	int k=random(1,4,false);
 	switch (k){
-		case 1 : aussenspiegel=true; cout << "Knacks, spiegel abgebrochen!\t"; break;
-		case 2 : motorhaube=true; cout << "Wums, wo kam die Wand her?\t"; break;
-		case 3 : reifen=true; cout << "PENG! Da ist ein Reifen geplatzt...\t"; break;
-		case 4 : fenster=true; cout << "Klirr... Das war ein Fenster.\t"; break;
+		case 1 : if(!aussenspiegel){
+			aussenspiegel=true;
+			cout << "Knacks, Spiegel abgebrochen!\t";
+			break;
+		}
+		case 2 : if(!motorhaube){
+			motorhaube=true;
+			cout << "Wums, wo kam die Wand her?\t";
+			break;
+		}
+		case 3 : if(!reifen){
+			reifen=true;
+			cout << "PENG! Da ist ein Reifen geplatzt...\t";
+			break;
+		}
+		case 4 : if(!fenster){
+			fenster=true;
+			cout << "Klirr... Das war ein Fenster.\t";
+			break;
+		}
 	}
 	if(aussenspiegel&&motorhaube&&reifen&&fenster) throw 77;
 }
@@ -78,10 +120,10 @@ void myAuto::tanken(const int liter){
 	double preis=((double)random(85,125,false))/100;
 	cout << endl << "Jetzt kostet der Sprit " << preis << "Euro" << endl
 		<< "und du hast nur noch " << tankFuellung << "Liter im Tank" << endl;
-	if (preis*fuell>0 && preis*fuell<geldbeutel){
+	if (preis*fuell>=0 && preis*fuell<geldbeutel){
 		geldbeutel-=preis*fuell;
 		tankFuellung+=fuell;
-		cout << "erfolgreich aufgetankt =) fuer nur " << preis*fuell << "Euro" << endl;;
+		cout << "erfolgreich aufgetankt =) fuer " << preis*fuell << "Euro" << endl;;
 		if(tankFuellung>tankKapazitaet){
 			cout << "Auch wenn dabei " << tankFuellung-tankKapazitaet << " liter uebergelaufen sind" << endl;
 			tankFuellung=tankKapazitaet;
@@ -108,5 +150,7 @@ void myAuto::reparier(){
 }
 
 myAuto::myAuto() : kilometerstand(0), geldbeutel(50), verbrauch(0.003), tankKapazitaet(50), tankFuellung(tankKapazitaet),
-	aussenspiegel(false), motorhaube(false), reifen(false), fenster(false) {}
+	aussenspiegel(false), motorhaube(false), reifen(false), fenster(false), polizeiAufmerksamkeit(0) {
+	random(1,1,true);
+}
 
