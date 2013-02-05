@@ -1,5 +1,9 @@
 #ifndef MEIN_AUTO_IST_TOLL
 #define MEIN_AUTO_IST_TOLL
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
 class myAuto{
 	public:
 		int getKilometerstand();
@@ -14,8 +18,12 @@ class myAuto{
 		void volltanken();
 		void reparier();
 		myAuto();
+		myAuto(const myAuto&);
+		myAuto(double, double, double, double, double, bool, bool, bool, bool, double);
 		void ueberfall(int);
 		int getPolizeigefahr();
+		string save();
+		myAuto& klau();
 	private:
 		double kilometerstand;
 		double geldbeutel;

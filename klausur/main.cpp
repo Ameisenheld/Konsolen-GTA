@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "myAuto.h"
 using namespace std;
 
@@ -6,7 +7,7 @@ int main() {
 	myAuto meinAuto;
 	int input=0;
 	try{
-		while(input<11 && input >=0){
+		while(input<12 && input >=0){
 			if(input==0)
 				cout <<  endl <<"MENU:" << endl
 					 << "0\t" << "Ruft dieses Menue wieder auf" << endl
@@ -18,8 +19,9 @@ int main() {
 					 << "6\t" << "Auto auf Schaeden ueberpruefen" << endl
 					 << "7\t" << "In die Werkstatt fahren" << endl
 					 << "8\t" << "Polizeistatus anzeigen" << endl
-					 << "9\t" << "Speichern" << endl
-					 << "10\t" << "Laden" << endl
+					 << "9\t" << "Auto klauen" << endl
+					 << "10\t" << "Speichern" << endl
+					 << "11\t" << "Laden" << endl
 					 << "11\t" << "Beenden" << endl;
 			if(input==1){
 				double a,b;
@@ -59,10 +61,28 @@ int main() {
 				cout << meinAuto.getPolizeigefahr() << "% der Polizisten kennen dich" << endl;
 			}
 			if(input==9){
-				
+				meinAuto=meinAuto.klau();
 			}
 			if(input==10){
-				
+				ofstream ofs;
+				ofs.open("console-gta.NOCHANGE");
+				if(ofs){
+					ofs << meinAuto.save();
+					ofs.close();
+				}
+			}
+			if(input==11){
+				ifstream ifs;
+				ifs.open("console-gta.NOCHANGE");
+				if(ifs){
+					double kilometerstand, geldbeutel, verbrauch, tankKapazitaet, tankFuellung;
+					bool aussenspiegel, motorhaube, reifen, fenster;
+					double polizeiAufmerksamkeit;
+					ifs >> kilometerstand >> geldbeutel >> verbrauch >> tankKapazitaet >> tankFuellung
+						>> aussenspiegel >> motorhaube >> reifen >> fenster >> polizeiAufmerksamkeit;
+					meinAuto=*new myAuto(kilometerstand,geldbeutel, verbrauch, tankKapazitaet, tankFuellung,
+											aussenspiegel, motorhaube, reifen, fenster, polizeiAufmerksamkeit);
+				}
 			}
 			cin >> input;	
 		}

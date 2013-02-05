@@ -1,10 +1,13 @@
 #include "myAuto.h"
 #include <iostream>
+#include <sstream>
+#include <string>
 #include <cstdlib>
 #include <ctime>
 using namespace std;
 
 int myAuto::random(int lowerbounds, int upperbounds, bool randomize){
+	if(upperbounds<lowerbounds) return 0;
 	time_t t;
 	if(randomize) {
 		time(&t);
@@ -58,7 +61,14 @@ void myAuto::fahr(double kmh, double km){
 			if(memory%10 == 0){
 				sleep();
 			}
-			if(random(0,50,false)==42) unfall();
+			if(kilometerstand<50000){
+				if(random(0,50,false)==42)
+					unfall();
+			}
+			else{
+				if(random(0,50-kilometerstand/1000,false)==0)
+					unfall();
+			}
 		}
 	}
 	tankFuellung=tankFuellung-verbrauch*kmh*(km-(int)km);
@@ -114,6 +124,12 @@ void myAuto::unfall(){
 	if(aussenspiegel&&motorhaube&&reifen&&fenster) throw 77;
 }
 
+myAuto& myAuto::klau(){
+	 return *new myAuto(random(100,100000,false),geldbeutel,(double)random(1,29,false)/1000, random(30,70,false),
+	 					random(5,30,false), (bool)random(0,5,false), (bool)random(0,10,false), false,
+						(bool)random(0,2,false), polizeiAufmerksamkeit+2);
+}
+
 void myAuto::tanken(const int liter){
 	int fuell = liter;
 	if(fuell==0) fuell=tankKapazitaet-tankFuellung;
@@ -149,8 +165,28 @@ void myAuto::reparier(){
 	}
 }
 
+string myAuto::save(){
+	stringstream ss;
+	ss  << kilometerstand << endl << geldbeutel << endl << verbrauch << endl << tankKapazitaet << endl << tankFuellung << endl
+		<< aussenspiegel << endl << motorhaube << endl << reifen << endl << fenster << endl << polizeiAufmerksamkeit << endl;
+	return ss.str();
+}
+
 myAuto::myAuto() : kilometerstand(0), geldbeutel(50), verbrauch(0.003), tankKapazitaet(50), tankFuellung(tankKapazitaet),
 	aussenspiegel(false), motorhaube(false), reifen(false), fenster(false), polizeiAufmerksamkeit(0) {
+	random(1,1,true);
+}
+
+myAuto::myAuto(const myAuto &a) : kilometerstand(a.kilometerstand), geldbeutel(a.geldbeutel), verbrauch(a.verbrauch), 
+		tankKapazitaet(a.tankKapazitaet), tankFuellung(a.tankFuellung), aussenspiegel(a.aussenspiegel),
+		motorhaube(a.motorhaube), reifen(a.reifen), fenster(a.fenster), polizeiAufmerksamkeit(a.polizeiAufmerksamkeit) {
+	random(1,1,true);
+}
+
+
+myAuto::myAuto(double km,double geld,double verb,double kap,double fuel,bool spg,bool mot,bool rfn,bool fns,double pA) :
+	kilometerstand(km), geldbeutel(geld), verbrauch(verb), tankKapazitaet(kap), tankFuellung(fuel),
+	aussenspiegel(spg), motorhaube(mot), reifen(rfn), fenster(fns), polizeiAufmerksamkeit(pA) {
 	random(1,1,true);
 }
 
